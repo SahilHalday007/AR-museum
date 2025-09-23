@@ -42,7 +42,7 @@ function initApp() {
 
 function initializePenguinSound() {
     penguinSound = new Audio();
-    penguinSound.src = 'assets/sounds/african_penguin.mp3';
+    penguinSound.src = 'assets/african_penguin_sound.mp3';
     penguinSound.preload = 'auto';
     penguinSound.volume = 0.7;
     
@@ -191,38 +191,32 @@ function setupAREvents() {
 }
 
 function setupGestureEventListeners() {
-    const penguinWrapper = document.getElementById('penguin-wrapper');
-    
-    if (!penguinWrapper) {
-        console.warn('Penguin wrapper not found for gesture events');
-        setTimeout(setupGestureEventListeners, 500);
-        return;
-    }
+    const penguin = document.getElementById('penguin');
 
     console.log('Setting up gesture event listeners');
 
     // Listen for gesture events from the gesture-handler component
-    penguinWrapper.addEventListener('grab-start', () => {
+    penguin.addEventListener('grab-start', () => {
         console.log('Gesture started - grab');
     });
 
-    penguinWrapper.addEventListener('grab-end', () => {
+    penguin.addEventListener('grab-end', () => {
         console.log('Gesture ended - grab');
     });
 
-    penguinWrapper.addEventListener('pinchstarted', () => {
+    penguin.addEventListener('pinchstarted', () => {
         console.log('Gesture started - pinch');
     });
 
-    penguinWrapper.addEventListener('pinchended', () => {
+    penguin.addEventListener('pinchended', () => {
         console.log('Gesture ended - pinch');
     });
 
-    penguinWrapper.addEventListener('rotatestarted', () => {
+    penguin.addEventListener('rotatestarted', () => {
         console.log('Gesture started - rotate');
     });
 
-    penguinWrapper.addEventListener('rotateended', () => {
+    penguin.addEventListener('rotateended', () => {
         console.log('Gesture ended - rotate');
     });
 }
@@ -236,9 +230,7 @@ function setupARInteractions() {
         // Make penguin clickable
         penguinElement.classList.add('clickable');
         
-        // Remove any existing event listeners to prevent duplicates
-        penguinElement.removeEventListener('click', handlePenguinClick);
-
+        // Define the event handlers first
         let clickCooldown = false;
 
         const handlePenguinClick = (e) => {
@@ -252,7 +244,7 @@ function setupARInteractions() {
             }
             
             clickCooldown = true;
-            console.log('🐧 Penguin clicked! Playing penguin sound...');
+            console.log('Penguin clicked! Playing penguin sound...');
 
             playPenguinSound();
 
@@ -273,10 +265,38 @@ function setupARInteractions() {
             }, 1000);
         };
 
-        penguinElement.addEventListener('click', handlePenguinClick, { once: false, passive: false });
+        const handlePenguinHoverEnter = () => {
+            penguinElement.setAttribute('animation__hover', {
+                property: 'scale',
+                to: '5.1 5.1 5.1',
+                dur: 150,
+                easing: 'easeOutQuad'
+            });
+        };
 
-        // Store reference for cleanup
+        const handlePenguinHoverLeave = () => {
+            penguinElement.setAttribute('animation__hover', {
+                property: 'scale',
+                to: '5 5 5',
+                dur: 150,
+                easing: 'easeOutQuad'
+            });
+        };
+
+        // Remove any existing event listeners to prevent duplicates
+        penguinElement.removeEventListener('click', handlePenguinClick);
+        penguinElement.removeEventListener('mouseenter', handlePenguinHoverEnter);
+        penguinElement.removeEventListener('mouseleave', handlePenguinHoverLeave);
+
+        // Add event listeners
+        penguinElement.addEventListener('click', handlePenguinClick, { once: false, passive: false });
+        penguinElement.addEventListener('mouseenter', handlePenguinHoverEnter, { passive: true });
+        penguinElement.addEventListener('mouseleave', handlePenguinHoverLeave, { passive: true });
+
+        // Store references for cleanup
         penguinElement._clickHandler = handlePenguinClick;
+        penguinElement._hoverEnterHandler = handlePenguinHoverEnter;
+        penguinElement._hoverLeaveHandler = handlePenguinHoverLeave;
 
     } else {
         console.warn('Penguin element not found for click interaction');
