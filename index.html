@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AR Penguin Explorer</title>
+
+  <!-- A-Frame + AR.js + Extras -->
+  <script src="public/aframe-v1.7.0.min.js"></script>
+  <script src="public/aframe-extras-v7.2.0.min.js"></script>
+  <script src="public/aframe-ar.js"></script>
+  
+  <!-- Gesture Detection Components -->
+  <script src="public/gesture-detector.js"></script>
+  <script src="public/gesture-handler.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loadingScreen">
+    <h1> AR Penguin Explorer</h1>
+    <p>Initializing AR camera and marker detection...</p>
+    <div class="spinner"></div>
+  </div>
+
+<!-- UI Overlay -->
+    <div class="ui-overlay">
+        <div class="top-bar">
+            African Penguin AR Experience
+        </div>
+
+        <div class="instructions" id="instructions">
+            Point your camera at a flat surface and tap the info button to learn about African penguins!
+        </div>
+
+        <div class="bottom-controls">
+            <button class="control-btn" id="infoBtn" title="Penguin Information">
+                ℹ️
+            </button>
+            <button class="control-btn" id="resetBtn" title="Reset View">
+                🔄
+            </button>
+            <button class="control-btn" id="rotateBtn" title="Rotate Penguin">
+                ↪️
+            </button>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="info-panel" id="infoPanel">
+            <button class="close-btn" id="closeBtn">×</button>
+            <div id="infoContent">
+                <h3>African Penguin Facts</h3>
+                <div class="info-nav">
+                    <button class="nav-btn" data-info="general">General</button>
+                    <button class="nav-btn" data-info="habitat">Habitat</button>
+                    <button class="nav-btn" data-info="behavior">Behavior</button>
+                </div>
+                <div id="infoText"></div>
+            </div>
+        </div>
+    </div>
+
+
+  <!-- AR Scene -->
+  <a-scene
+    embedded
+    arjs
+    vr-mode-ui="enabled: false"
+    renderer="logarithmicDepthBuffer: true; "
+    loading-screen="enabled: false"
+    gesture-detector
+    id="scene">
+    
+    <!-- Assets -->
+    <a-assets>
+      <!-- Penguin 3D Model -->
+      <a-asset-item id="penguin-model" src="assets/african_penguin_spheniscus_demersus_low_poly.glb"></a-asset-item>
+    </a-assets>
+
+    <!-- Hiro Marker -->
+    <a-marker 
+        preset="hiro" 
+        id="hiro-marker" 
+        markerhandler
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;">
+      > 
+        <a-entity
+          id="penguin"
+          gltf-model="#penguin-model"
+          position="0 0 0" 
+          scale="5 5 5" 
+          class="clickable"
+          animation-mixer="loop: repeat"
+          gesture-handler>
+        </a-entity>
+     
+
+      <!-- Lights -->
+      <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+      <a-light type="directional" position="0 5 0" color="#ffffff" intensity="0.6"></a-light>
+    </a-marker>
+
+    <!-- Camera -->
+    <a-entity camera position="0 0 0" look-controls="enabled: false"></a-entity>
+  </a-scene>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
