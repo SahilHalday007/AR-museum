@@ -90,7 +90,11 @@
         cursor="fuse: false; rayOrigin: mouse;">
         
       <!-- Wrapper entity for better rotation control -->
-   
+      <a-entity 
+          id="penguin-wrapper" 
+          position="0 0 0"
+          gesture-handler>
+          
         <a-entity
           id="penguin"
           gltf-model="#penguin-model"
@@ -100,6 +104,7 @@
           animation-mixer="loop: repeat"
           class="clickable">
         </a-entity>
+      </a-entity>
 
       <!-- Lights -->
       <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>

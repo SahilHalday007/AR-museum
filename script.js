@@ -191,32 +191,38 @@ function setupAREvents() {
 }
 
 function setupGestureEventListeners() {
-    const penguin = document.getElementById('penguin');
+    const penguinWrapper = document.getElementById('penguin-wrapper');
+    
+    if (!penguinWrapper) {
+        console.warn('Penguin wrapper not found for gesture events');
+        setTimeout(setupGestureEventListeners, 500);
+        return;
+    }
 
     console.log('Setting up gesture event listeners');
 
     // Listen for gesture events from the gesture-handler component
-    penguin.addEventListener('grab-start', () => {
+    penguinWrapper.addEventListener('grab-start', () => {
         console.log('Gesture started - grab');
     });
 
-    penguin.addEventListener('grab-end', () => {
+    penguinWrapper.addEventListener('grab-end', () => {
         console.log('Gesture ended - grab');
     });
 
-    penguin.addEventListener('pinchstarted', () => {
+    penguinWrapper.addEventListener('pinchstarted', () => {
         console.log('Gesture started - pinch');
     });
 
-    penguin.addEventListener('pinchended', () => {
+    penguinWrapper.addEventListener('pinchended', () => {
         console.log('Gesture ended - pinch');
     });
 
-    penguin.addEventListener('rotatestarted', () => {
+    penguinWrapper.addEventListener('rotatestarted', () => {
         console.log('Gesture started - rotate');
     });
 
-    penguin.addEventListener('rotateended', () => {
+    penguinWrapper.addEventListener('rotateended', () => {
         console.log('Gesture ended - rotate');
     });
 }

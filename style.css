@@ -1,7 +1,7 @@
 * {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  box-sizing: border-box;
 }
 
 body {
@@ -26,15 +26,16 @@ body {
 }
 
 #loadingScreen h1 {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
   margin-bottom: 1rem;
   font-weight: 300;
 }
 
 #loadingScreen p {
-  font-size: 1.1rem;
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
   margin-bottom: 2rem;
   opacity: 0.9;
+  padding: 0 20px;
 }
 
 .spinner {
@@ -64,33 +65,38 @@ body {
 
 .top-bar {
     position: absolute;
-    top: 20px;
+    top: max(10px, env(safe-area-inset-top));
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(10px);
     color: white;
-    padding: 12px 24px;
+    padding: clamp(8px, 3vw, 12px) clamp(16px, 4vw, 24px);
     border-radius: 25px;
-    font-size: 1.1em;
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
     font-weight: 600;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    max-width: 90vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .bottom-controls {
     position: absolute;
-    bottom: 30px;
+    bottom: max(20px, env(safe-area-inset-bottom));
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 15px;
+    gap: clamp(8px, 3vw, 15px);
+    padding: 0 10px;
 }
 
 .control-btn {
     background: rgba(255, 255, 255, 0.95);
     border: none;
-    width: 60px;
-    height: 60px;
+    width: clamp(50px, 12vw, 60px);
+    height: clamp(50px, 12vw, 60px);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -99,7 +105,7 @@ body {
     transition: all 0.3s ease;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     pointer-events: auto;
-    font-size: 1.5em;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
 }
 
 .control-btn:hover {
@@ -116,52 +122,56 @@ body {
 .info-panel {
     position: absolute;
     top: 50%;
-    right: -400px;
+    right: -100%;
     transform: translateY(-50%);
-    width: 350px;
-    background: rgba(255, 255, 255, 0.95);
+    width: min(350px, 90vw);
+    max-height: min(80vh, 600px);
+    background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(15px);
     border-radius: 20px;
-    padding: 25px;
+    padding: clamp(15px, 4vw, 25px);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .info-panel.active {
-    right: 20px;
+    right: max(10px, env(safe-area-inset-right));
 }
 
 .info-panel h3 {
-    margin: 0 0 15px 0;
+    margin: 0 0 clamp(10px, 3vw, 15px) 0;
     color: #2c3e50;
-    font-size: 1.4em;
+    font-size: clamp(1.2rem, 4vw, 1.4rem);
     font-weight: 700;
 }
 
 .info-panel p {
-    margin: 0 0 12px 0;
+    margin: 0 0 clamp(8px, 2vw, 12px) 0;
     color: #34495e;
     line-height: 1.5;
-    font-size: 0.95em;
+    font-size: clamp(0.85rem, 3vw, 0.95rem);
 }
 
 .close-btn {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: clamp(10px, 3vw, 15px);
+    right: clamp(10px, 3vw, 15px);
     background: none;
     border: none;
-    font-size: 1.5em;
+    font-size: clamp(1.3rem, 4vw, 1.5rem);
     cursor: pointer;
     color: #7f8c8d;
-    width: 30px;
-    height: 30px;
+    width: clamp(25px, 8vw, 30px);
+    height: clamp(25px, 8vw, 30px);
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     transition: all 0.2s ease;
+    z-index: 101;
 }
 
 .close-btn:hover {
@@ -172,18 +182,22 @@ body {
 /* Info Navigation */
 .info-nav {
     display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: clamp(5px, 2vw, 10px);
+    margin-bottom: clamp(10px, 3vw, 15px);
+    flex-wrap: wrap;
 }
 
 .nav-btn {
     background: #e0e0e0;
     border: none;
-    padding: 8px 12px;
+    padding: clamp(6px, 2vw, 8px) clamp(8px, 2.5vw, 12px);
     border-radius: 20px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: clamp(0.8rem, 3vw, 0.9rem);
     transition: all 0.2s ease;
+    flex: 1;
+    min-width: fit-content;
+    text-align: center;
 }
 
 .nav-btn.active {
@@ -198,17 +212,19 @@ body {
 /* Instructions */
 .instructions {
     position: absolute;
-    bottom: 120px;
+    bottom: clamp(100px, 25vw, 120px);
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(10px);
     color: white;
-    padding: 15px 20px;
+    padding: clamp(10px, 3vw, 15px) clamp(15px, 4vw, 20px);
     border-radius: 15px;
     text-align: center;
-    font-size: 0.9em;
+    font-size: clamp(0.8rem, 3vw, 0.9rem);
     animation: fadeInUp 0.5s ease;
+    max-width: 90vw;
+    width: fit-content;
 }
 
 @keyframes fadeInUp {
@@ -222,42 +238,163 @@ body {
     }
 }
 
-/* Responsive Design */
+/* AR Scene styling - Full screen mobile optimization */
+a-scene {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile */
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+/* Mobile-specific optimizations */
 @media (max-width: 768px) {
     .info-panel {
-        width: calc(100% - 40px);
-        right: -100%;
+        width: calc(100vw - 40px);
+        max-height: 70vh;
+        top: 50%;
+        transform: translateY(-50%);
+        right: -100vw;
     }
     
     .info-panel.active {
         right: 20px;
+        left: 20px;
+        width: calc(100vw - 40px);
     }
     
     .top-bar {
-        font-size: 1em;
+        font-size: clamp(0.8rem, 4vw, 1rem);
         padding: 10px 20px;
+        max-width: 95vw;
     }
 
     .bottom-controls {
-        flex-wrap: wrap;
-        justify-content: center;
+        bottom: max(15px, env(safe-area-inset-bottom));
         gap: 10px;
+        flex-wrap: nowrap;
+        justify-content: center;
+        width: 100%;
     }
 
     .control-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 1.2em;
+        width: clamp(45px, 14vw, 55px);
+        height: clamp(45px, 14vw, 55px);
+        font-size: clamp(1.1rem, 4.5vw, 1.3rem);
+    }
+
+    /* Improve touch targets for mobile */
+    .control-btn, .nav-btn, .close-btn {
+        min-height: 44px; /* Apple's recommended minimum touch target */
+        min-width: 44px;
+    }
+
+    /* Prevent zoom on input for iOS */
+    @media (max-width: 480px) {
+        .info-panel {
+            font-size: 16px; /* Prevent zoom on focus */
+        }
+        
+        input, select, textarea {
+            font-size: 16px; /* Prevent zoom on focus */
+        }
     }
 }
 
-/* AR Scene styling */
-a-scene {
-  width: 100%;
-  height: 100vh;
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .info-panel {
+        width: min(400px, 80vw);
+    }
+    
+    .control-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 1.3rem;
+    }
+}
+
+/* Landscape mobile optimizations */
+@media (max-height: 500px) and (orientation: landscape) {
+    .top-bar {
+        top: 5px;
+        padding: 6px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .bottom-controls {
+        bottom: 10px;
+    }
+    
+    .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+    
+    .info-panel {
+        max-height: 90vh;
+        padding: 15px;
+    }
+    
+    .instructions {
+        bottom: 80px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
 }
 
 /* Hide A-Frame UI */
 .a-enter-vr {
   display: none !important;
+}
+
+/* Ensure fullscreen for mobile browsers */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Safe area insets for modern mobile devices */
+@supports(padding: max(0px)) {
+    .ui-overlay {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+}
+
+/* Prevent text selection */
+.ui-overlay {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Smooth scrolling for info panel */
+.info-panel {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for webkit browsers */
+.info-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.info-panel::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.info-panel::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+
+.info-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
 }
