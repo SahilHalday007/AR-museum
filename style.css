@@ -149,28 +149,22 @@ a-scene {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   pointer-events: auto;
   font-size: clamp(1.2rem, 4vw, 1.5rem);
   min-width: 44px;
   min-height: 44px;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
 }
 
-@media (hover: hover) {
-  .control-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
-    background: rgba(255, 255, 255, 1);
-  }
+.control-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 1);
 }
 
 .control-btn:active {
   transform: translateY(0);
-  background: #4CAF50;
-  color: white;
 }
 
 /* Info Panel */
@@ -343,6 +337,10 @@ a-scene {
     width: clamp(45px, 14vw, 55px);
     height: clamp(45px, 14vw, 55px);
     font-size: clamp(1.1rem, 4.5vw, 1.3rem);
+  }
+  .nav-btn.active {
+    background: #4CAF50;
+    color: white;
   }
 }
 
