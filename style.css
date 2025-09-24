@@ -130,7 +130,7 @@ a-scene {
 
 .bottom-controls {
   position: fixed;
-  bottom: max(env(safe-area-inset-bottom, 20px), 20px);
+  bottom: max(env(safe-area-inset-bottom, 40px), 40px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -272,7 +272,7 @@ a-scene {
 /* Instructions */
 .instructions {
   position: absolute;
-  bottom: clamp(100px, 25vw, 120px);
+  bottom: clamp(140px, 30vw, 160px);
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.7);
@@ -286,6 +286,7 @@ a-scene {
   max-width: 90vw;
   width: fit-content;
   pointer-events: none;
+  z-index: 1001;
 }
 
 @keyframes fadeInUp {
