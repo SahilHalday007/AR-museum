@@ -236,18 +236,12 @@ function setupARInteractions() {
 
         // Remove any existing event listeners to prevent duplicates
         penguinElement.removeEventListener('click', handlePenguinClick);
-        penguinElement.removeEventListener('mouseenter', handlePenguinHoverEnter);
-        penguinElement.removeEventListener('mouseleave', handlePenguinHoverLeave);
 
         // Add event listeners
         penguinElement.addEventListener('click', handlePenguinClick, { once: false, passive: false });
-        penguinElement.addEventListener('mouseenter', handlePenguinHoverEnter, { passive: true });
-        penguinElement.addEventListener('mouseleave', handlePenguinHoverLeave, { passive: true });
 
         // Store references for cleanup
         penguinElement._clickHandler = handlePenguinClick;
-        penguinElement._hoverEnterHandler = handlePenguinHoverEnter;
-        penguinElement._hoverLeaveHandler = handlePenguinHoverLeave;
 
     } else {
         console.warn('Penguin element not found for click interaction');

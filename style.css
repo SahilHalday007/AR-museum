@@ -129,14 +129,14 @@ a-scene {
 }
 
 .bottom-controls {
-  position: absolute;
+  position: fixed;
   bottom: max(env(safe-area-inset-bottom, 20px), 20px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: clamp(8px, 3vw, 15px);
   padding: 0 10px;
-  pointer-events: auto;
+  z-index: 1001; /* Ensure it stays above the camera view */
 }
 
 .control-btn {
@@ -326,11 +326,13 @@ a-scene {
   }
 
   .bottom-controls {
-    bottom: max(15px, env(safe-area-inset-bottom, 15px));
-    gap: 10px;
-    flex-wrap: nowrap;
-    justify-content: center;
-    width: 100%;
+    bottom: max(env(safe-area-inset-bottom, 15px), 15px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: clamp(8px, 3vw, 10px);
+    padding: 0 10px;
+    z-index: 1001;
   }
 
   .control-btn {
