@@ -341,8 +341,8 @@ a-scene {
   }
 
   .control-btn {
-    width: clamp(45px, 14vw, 55px);
-    height: clamp(45px, 14vw, 55px);
+    width: clamp(55px, 14vw, 65px);
+    height: clamp(55px, 14vw, 65px);
     font-size: clamp(1.1rem, 4.5vw, 1.3rem);
   }
 }
