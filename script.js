@@ -8,7 +8,7 @@ let appState = {
 };
 
 
-let loadingScreen, instructions, infoBtn, resetBtn, rotateBtn;
+let loadingScreen, instructions, infoBtn, resetBtn;
 let infoPanel, closeBtn, infoContent, infoText, navBtns;
 
 // Penguin sound
@@ -65,7 +65,6 @@ function initDOMElements() {
     instructions = document.getElementById('instructions');
     infoBtn = document.getElementById('infoBtn');
     resetBtn = document.getElementById('resetBtn');
-    rotateBtn = document.getElementById('rotateBtn');
     infoPanel = document.getElementById('infoPanel');
     closeBtn = document.getElementById('closeBtn');
     infoContent = document.getElementById('infoContent');
@@ -105,15 +104,15 @@ function setupEventListeners() {
     }
 
     // Rotate button
-    if (rotateBtn) {
-        rotateBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Rotate button clicked');
-            rotatePenguin();
-            playClickSound();
-        });
-    }
+    // if (rotateBtn) {
+    //     rotateBtn.addEventListener('click', (e) => {
+    //         e.preventDefault();
+    //         e.stopPropagation();
+    //         console.log('Rotate button clicked');
+    //         rotatePenguin();
+    //         playClickSound();
+    //     });
+    // }
 
     // Close info panel
     if (closeBtn) {
@@ -376,14 +375,14 @@ function resetARView() {
     }
 }
 
-function rotatePenguin() {
-    const penguinEntity = document.getElementById('penguin');
-    if (penguinEntity) {
-        let rotation = penguinEntity.getAttribute('rotation');
-        rotation.z += 90;
-        penguinEntity.setAttribute('rotation', rotation);
-    }
-}
+// function rotatePenguin() {
+//     const penguinEntity = document.getElementById('penguin');
+//     if (penguinEntity) {
+//         let rotation = penguinEntity.getAttribute('rotation');
+//         rotation.z += 90;
+//         penguinEntity.setAttribute('rotation', rotation);
+//     }
+// }
 
 
 // Handle camera viewport
