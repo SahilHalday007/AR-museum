@@ -110,6 +110,20 @@
 
   </a-scene>
 
+  <div id="cameraError" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; background: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px; z-index: 2000;">
+    <p>Unable to access the camera. Please ensure camera permissions are enabled and reload the page.</p>
+  </div>
+
   <script type="module" src="script.js"></script>
+  <script>
+    const scene = document.querySelector('a-scene');
+    scene.addEventListener('arjs-video-loaded', () => {
+      document.getElementById('cameraError').style.display = 'none';
+    });
+
+    scene.addEventListener('arjs-video-error', () => {
+      document.getElementById('cameraError').style.display = 'block';
+    });
+  </script>
 </body>
 </html>

@@ -249,9 +249,14 @@ function setupARInteractions() {
     }
 }
 
+function isPenguinRendered() {
+    const penguinElement = document.getElementById('penguin');
+    return penguinElement && penguinElement.hasAttribute('gltf-model');
+}
+
 function playPenguinSound() {
-    if (!appState.soundEnabled || !penguinSound) {
-        console.log('Sound disabled or penguin sound not available');
+    if (!appState.soundEnabled || !penguinSound || !isPenguinRendered()) {
+        console.log('Sound disabled, penguin sound not available, or penguin not rendered');
         return;
     }
 
@@ -264,25 +269,22 @@ function playPenguinSound() {
         isSoundPlaying = true;
         penguinSound.pause();
         penguinSound.currentTime = 0;
-        
+
         console.log('Playing African penguin sound...');
-        
-        
+
         const playPromise = penguinSound.play();
-        
+
         if (playPromise !== undefined) {
             playPromise.then(() => {
                 console.log('Penguin sound started playing successfully');
             }).catch((error) => {
                 console.error('Penguin sound play failed:', error);
                 isSoundPlaying = false;
-                playClickSound();
             });
         }
     } catch (error) {
         console.error('Error playing penguin sound:', error);
         isSoundPlaying = false;
-        playClickSound();
     }
 }
 
