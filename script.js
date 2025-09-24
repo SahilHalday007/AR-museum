@@ -7,7 +7,7 @@ let appState = {
     currentInfo: 'general'
 };
 
-// DOM Elements
+
 let loadingScreen, instructions, infoBtn, resetBtn, rotateBtn;
 let infoPanel, closeBtn, infoContent, infoText, navBtns;
 
@@ -104,7 +104,7 @@ function setupEventListeners() {
         });
     }
 
-    // Rotate button (for 90-degree rotation)
+    // Rotate button
     if (rotateBtn) {
         rotateBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -182,7 +182,6 @@ function setupAREvents() {
             if (!appState.arSceneLoaded) {
                 appState.arSceneLoaded = true;
                 setupARInteractions();
-                initCenteredRotation();
             }
         });
     };
@@ -198,14 +197,6 @@ function setupARInteractions() {
     if (penguinElement) {
         console.log('Setting up penguin click interaction');
 
-        // Set initial entity position and rotation for proper pivoting
-        penguinElement.setAttribute('position', '0 0 0');
-        penguinElement.setAttribute('rotation', '-90 0 0');
-        penguinWrapper.setAttribute('position', '0 0 0');
-
-        // Make penguin clickable
-        penguinElement.classList.add('clickable');
-        
         // Define the event handlers first
         let clickCooldown = false;
 
@@ -243,24 +234,6 @@ function setupARInteractions() {
             }, 1000);
         };
 
-        const handlePenguinHoverEnter = () => {
-            penguinElement.setAttribute('animation__hover', {
-                property: 'scale',
-                to: '5.1 5.1 5.1',
-                dur: 150,
-                easing: 'easeOutQuad'
-            });
-        };
-
-        const handlePenguinHoverLeave = () => {
-            penguinElement.setAttribute('animation__hover', {
-                property: 'scale',
-                to: '5 5 5',
-                dur: 150,
-                easing: 'easeOutQuad'
-            });
-        };
-
         // Remove any existing event listeners to prevent duplicates
         penguinElement.removeEventListener('click', handlePenguinClick);
         penguinElement.removeEventListener('mouseenter', handlePenguinHoverEnter);
@@ -295,14 +268,12 @@ function playPenguinSound() {
 
     try {
         isSoundPlaying = true;
-        
-        // Stop and reset the sound
         penguinSound.pause();
         penguinSound.currentTime = 0;
         
         console.log('Playing African penguin sound...');
         
-        // Play the sound
+        
         const playPromise = penguinSound.play();
         
         if (playPromise !== undefined) {
@@ -393,16 +364,10 @@ function hideInfoPanel() {
 function resetARView() {
     console.log('Resetting AR view');
     
-    const penguinWrapper = document.getElementById('penguin-wrapper');
     const penguinElement = document.getElementById('penguin');
     
-    if (penguinWrapper && penguinElement) {
+    if (penguinElement) {
         console.log('Resetting penguin position, rotation and scale');
-        
-        // Reset wrapper and entity properties
-        penguinWrapper.setAttribute('position', '0 0 0');
-        penguinWrapper.setAttribute('rotation', '0 0 0');
-        penguinWrapper.setAttribute('scale', '1 1 1');
         
         // Reset entity rotation and scale while maintaining proper positioning
         penguinElement.setAttribute('position', '0 0 0');
@@ -410,7 +375,6 @@ function resetARView() {
         penguinElement.setAttribute('scale', '5 5 5');
         
         // Remove any ongoing animations
-        penguinWrapper.removeAttribute('animation');
         penguinElement.removeAttribute('animation__click');
         penguinElement.removeAttribute('animation__hover');
     }
@@ -420,11 +384,35 @@ function rotatePenguin() {
     const penguinEntity = document.getElementById('penguin');
     if (penguinEntity) {
         let rotation = penguinEntity.getAttribute('rotation');
-        rotation.y += 90;
+        rotation.z += 90;
         penguinEntity.setAttribute('rotation', rotation);
     }
 }
 
+
+// Handle camera viewport
+function setupCameraViewport() {
+    const video = document.querySelector('.arjs-video');
+    const scene = document.querySelector('a-scene');
+    
+    if (video && scene) {
+        // Set video properties
+        video.style.width = '100vw';
+        video.style.height = '100vh';
+        video.style.objectFit = 'cover';
+        
+        // Update AR.js source size
+        const arSystem = scene.systems['arjs'];
+        if (arSystem) {
+            arSystem.arDisplay.setSize(window.innerWidth, window.innerHeight);
+        }
+    }
+}
+
+// Update viewport on resize
+window.addEventListener('resize', () => {
+    setupCameraViewport();
+});
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', initApp);

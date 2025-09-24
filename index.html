@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>AR Penguin Explorer</title>
 
   <!-- A-Frame + AR.js + Extras -->
@@ -65,21 +66,22 @@
 
   <!-- AR Scene -->
   <a-scene
-    embedded
-    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3; trackingMethod: best; sourceWidth: 1280; sourceHeight: 960; displayWidth: 1280; displayHeight: 960;"
-    vr-mode-ui="enabled: false"
-    renderer="logarithmicDepthBuffer: true; antialias: true; colorManagement: true; physicallyCorrectLights: true;"
-    loading-screen="enabled: false"
-    cursor="rayOrigin: mouse" 
-    raycaster="objects: .clickable"
-    gesture-detector
-    id="scene">
+      embedded
+      arjs="sourceType: webcam;"
+      renderer="logarithmicDepthBuffer: true; antialias: true; alpha: true;"
+      vr-mode-ui="enabled: false"
+      gesture-detector
+      id="scene"
+    >
     
     <!-- Assets -->
     <a-assets>
       <!-- Penguin 3D Model -->
       <a-asset-item id="penguin-model" src="assets/african_penguin_spheniscus_demersus_low_poly.glb"></a-asset-item>
     </a-assets>
+
+    <!-- Camera -->
+    <a-entity camera position="0 0 0" look-controls="enabled: false"></a-entity>
 
     <!-- Hiro Marker -->
     <a-marker 
@@ -89,12 +91,6 @@
         emitevents="true"
         cursor="fuse: false; rayOrigin: mouse;">
         
-      <!-- Wrapper entity for better rotation control -->
-      <a-entity 
-          id="penguin-wrapper" 
-          position="0 0 0"
-          gesture-handler>
-          
         <a-entity
           id="penguin"
           gltf-model="#penguin-model"
@@ -102,17 +98,16 @@
           rotation="-90 0 0"
           scale="5 5 5" 
           animation-mixer="loop: repeat"
-          class="clickable">
+          class="clickable"
+          gesture-handler>
         </a-entity>
-      </a-entity>
+
 
       <!-- Lights -->
       <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
       <a-light type="directional" position="0 5 0" color="#ffffff" intensity="0.6"></a-light>
     </a-marker>
 
-    <!-- Camera -->
-    <a-entity camera position="0 0 0" look-controls="enabled: false"></a-entity>
   </a-scene>
 
   <script type="module" src="script.js"></script>
