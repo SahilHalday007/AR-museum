@@ -19,8 +19,9 @@ let isSoundPlaying = false;
 function initApp() {
     console.log('Initializing AR Penguin Experience...');
 
-    // Initialize penguin sound
+    // Initialize sounds
     initializePenguinSound();
+    initClickSound();
 
     // Initialize DOM elements
     initDOMElements();
@@ -287,29 +288,79 @@ function playPenguinSound() {
     }
 }
 
+// Initialize audio context and click sound buffer
+let audioContext;
+let clickBuffer;
+const clickSoundBuffers = [];
+const MAX_SOUNDS = 10;
+
+async function initClickSound() {
+    try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // Create click sound data (short, crisp sound)
+        const sampleRate = audioContext.sampleRate;
+        const duration = 0.1;
+        const numSamples = duration * sampleRate;
+        const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+        const data = buffer.getChannelData(0);
+        
+        for (let i = 0; i < numSamples; i++) {
+            // Create a short, crisp click
+            const t = i / sampleRate;
+            data[i] = Math.sin(2 * Math.PI * 800 * t) * Math.exp(-20 * t);
+        }
+        
+        clickBuffer = buffer;
+        
+        // Pre-create buffer sources
+        for (let i = 0; i < MAX_SOUNDS; i++) {
+            clickSoundBuffers.push(createClickBufferSource());
+        }
+    } catch (error) {
+        console.error('Error initializing click sound:', error);
+    }
+}
+
+function createClickBufferSource() {
+    if (!audioContext || !clickBuffer) return null;
+    const source = audioContext.createBufferSource();
+    source.buffer = clickBuffer;
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = 0.2;
+    source.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    return { source, gainNode, used: false };
+}
+
 function playClickSound() {
-    if (!appState.soundEnabled) return;
+    if (!appState.soundEnabled || !audioContext || !clickBuffer) {
+        if (!audioContext) initClickSound();
+        return;
+    }
 
     try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+        // Find an unused buffer or create a new one
+        let soundBuffer = clickSoundBuffers.find(b => !b.used);
+        if (!soundBuffer) {
+            soundBuffer = createClickBufferSource();
+            clickSoundBuffers.push(soundBuffer);
+        }
 
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.1);
-
-        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.1);
-
+        if (soundBuffer) {
+            soundBuffer.used = true;
+            soundBuffer.source.start();
+            soundBuffer.source.onended = () => {
+                soundBuffer.used = false;
+                // Create a new buffer source for future use
+                const newBuffer = createClickBufferSource();
+                const index = clickSoundBuffers.indexOf(soundBuffer);
+                if (index !== -1) {
+                    clickSoundBuffers[index] = newBuffer;
+                }
+            };
+        }
     } catch (error) {
-        console.log('Audio context error:', error);
+        console.error('Error playing click sound:', error);
     }
 }
 
