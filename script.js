@@ -200,7 +200,7 @@ function setupARInteractions() {
 
         // Set initial entity position and rotation for proper pivoting
         penguinElement.setAttribute('position', '0 0 0');
-        penguinElement.setAttribute('rotation', '0 0 0');
+        penguinElement.setAttribute('rotation', '-90 0 0');
         penguinWrapper.setAttribute('position', '0 0 0');
 
         // Make penguin clickable
@@ -239,7 +239,7 @@ function setupARInteractions() {
                 clickCooldown = false;
                 penguinElement.removeAttribute('animation__click');
                 // Ensure position stays centered after animation
-                penguinElement.setAttribute('position', '0 -1 0');
+                penguinElement.setAttribute('position', '0 0 0');
             }, 1000);
         };
 
