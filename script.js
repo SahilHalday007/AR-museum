@@ -110,7 +110,7 @@ function setupEventListeners() {
             e.preventDefault();
             e.stopPropagation();
             console.log('Rotate button clicked');
-            rotatePenguin90();
+            rotatePenguin();
             playClickSound();
         });
     }
@@ -170,7 +170,7 @@ function setupAREvents() {
             console.log('AR Scene loaded successfully');
             appState.arSceneLoaded = true;
             setupARInteractions();
-            setupGestureEventListeners();
+          
         });
 
         scene.addEventListener('arjs-video-loaded', () => {
@@ -182,7 +182,7 @@ function setupAREvents() {
             if (!appState.arSceneLoaded) {
                 appState.arSceneLoaded = true;
                 setupARInteractions();
-                setupGestureEventListeners();
+                initCenteredRotation();
             }
         });
     };
@@ -190,48 +190,18 @@ function setupAREvents() {
     checkScene();
 }
 
-function setupGestureEventListeners() {
-    const penguinWrapper = document.getElementById('penguin-wrapper');
-    
-    if (!penguinWrapper) {
-        console.warn('Penguin wrapper not found for gesture events');
-        setTimeout(setupGestureEventListeners, 500);
-        return;
-    }
 
-    console.log('Setting up gesture event listeners');
-
-    // Listen for gesture events from the gesture-handler component
-    penguinWrapper.addEventListener('grab-start', () => {
-        console.log('Gesture started - grab');
-    });
-
-    penguinWrapper.addEventListener('grab-end', () => {
-        console.log('Gesture ended - grab');
-    });
-
-    penguinWrapper.addEventListener('pinchstarted', () => {
-        console.log('Gesture started - pinch');
-    });
-
-    penguinWrapper.addEventListener('pinchended', () => {
-        console.log('Gesture ended - pinch');
-    });
-
-    penguinWrapper.addEventListener('rotatestarted', () => {
-        console.log('Gesture started - rotate');
-    });
-
-    penguinWrapper.addEventListener('rotateended', () => {
-        console.log('Gesture ended - rotate');
-    });
-}
 
 function setupARInteractions() {
     const penguinElement = document.getElementById('penguin');
     
     if (penguinElement) {
         console.log('Setting up penguin click interaction');
+
+        // Set initial entity position and rotation for proper pivoting
+        penguinElement.setAttribute('position', '0 0 0');
+        penguinElement.setAttribute('rotation', '0 0 0');
+        penguinWrapper.setAttribute('position', '0 0 0');
 
         // Make penguin clickable
         penguinElement.classList.add('clickable');
@@ -254,10 +224,10 @@ function setupARInteractions() {
 
             playPenguinSound();
 
-            // Bounce animation for feedback
+            // Bounce animation for feedback (adjusted for centered pivot)
             penguinElement.setAttribute('animation__click', {
                 property: 'scale',
-                to: '5.2 5.2 5.2',
+                to: '6 6 6',
                 from: '5 5 5',
                 dur: 200,
                 dir: 'alternate',
@@ -268,6 +238,8 @@ function setupARInteractions() {
             setTimeout(() => {
                 clickCooldown = false;
                 penguinElement.removeAttribute('animation__click');
+                // Ensure position stays centered after animation
+                penguinElement.setAttribute('position', '0 -1 0');
             }, 1000);
         };
 
@@ -427,47 +399,32 @@ function resetARView() {
     if (penguinWrapper && penguinElement) {
         console.log('Resetting penguin position, rotation and scale');
         
-        // Reset wrapper rotation and penguin properties
+        // Reset wrapper and entity properties
+        penguinWrapper.setAttribute('position', '0 0 0');
         penguinWrapper.setAttribute('rotation', '0 0 0');
         penguinWrapper.setAttribute('scale', '1 1 1');
+        
+        // Reset entity rotation and scale while maintaining proper positioning
+        penguinElement.setAttribute('position', '0 0 0');
         penguinElement.setAttribute('rotation', '-90 0 0');
         penguinElement.setAttribute('scale', '5 5 5');
         
         // Remove any ongoing animations
         penguinWrapper.removeAttribute('animation');
         penguinElement.removeAttribute('animation__click');
+        penguinElement.removeAttribute('animation__hover');
     }
 }
 
-function rotatePenguin90() {
-    console.log('Rotating penguin 90 degrees');
-    
-    const penguinWrapper = document.getElementById('penguin-wrapper');
-    
-    if (penguinWrapper) {
-        let currentRotation = penguinWrapper.getAttribute('rotation');
-        let currentY = currentRotation.y || 0;
-        
-        // Calculate new rotation (add 90 degrees)
-        const newY = currentY + 90;
-        console.log(`Rotating from ${currentY}° to ${newY}°`);
-
-        // Smooth rotation animation
-        penguinWrapper.setAttribute('animation__rotate', {
-            property: 'rotation',
-            to: `0 ${newY} 0`,
-            dur: 300,
-            easing: 'easeInOutQuad'
-        });
-
-        setTimeout(() => {
-            penguinWrapper.setAttribute('rotation', `0 ${newY} 0`);
-            penguinWrapper.removeAttribute('animation__rotate');
-        }, 300);
-    } else {
-        console.warn('Penguin wrapper not found for rotation');
+function rotatePenguin() {
+    const penguinEntity = document.getElementById('penguin');
+    if (penguinEntity) {
+        let rotation = penguinEntity.getAttribute('rotation');
+        rotation.y += 90;
+        penguinEntity.setAttribute('rotation', rotation);
     }
 }
+
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', initApp);
